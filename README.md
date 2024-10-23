@@ -1,4 +1,4 @@
-# Real-time_Object_Detection_ML
+# Real time Object Detection ML
 
 Real-time Object Detection with YOLO and Streamlit
 
