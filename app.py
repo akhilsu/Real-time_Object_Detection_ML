@@ -135,3 +135,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Footer
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<footer><p>Developed by Akhil Sudhakaran</p></footer>", unsafe_allow_html=True)
