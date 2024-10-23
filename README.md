@@ -13,3 +13,5 @@ High Accuracy: Employs the pre-trained YOLOv3 model for precise object detection
 User-friendly Interface: Designed with Streamlit to provide an intuitive and interactive web-based user experience.
 Dynamic Model Loading: Automatically downloads required model files if not available locally, ensuring ease of setup.
 
+<img width="417" alt="image" src="https://github.com/user-attachments/assets/d24b8243-6768-4856-9037-e7f123dca982">
+<img width="426" alt="image" src="https://github.com/user-attachments/assets/79b1c369-d192-4a72-b159-1a7fc0f1eca7">
