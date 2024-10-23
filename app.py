@@ -2,18 +2,27 @@ import streamlit as st
 import cv2
 import numpy as np
 import os
-import urllib.request
+import requests
+from tqdm import tqdm
 
 # URLs for the YOLO model files
 YOLO_CONFIG_URL = "https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg"
 YOLO_WEIGHTS_URL = "https://pjreddie.com/media/files/yolov3.weights"
 COCO_NAMES_URL = "https://github.com/pjreddie/darknet/blob/master/data/coco.names"
 
-# Function to download files
+# Function to download files with progress bar
 def download_file(url, dest_path):
     if not os.path.exists(dest_path):
         st.write(f"Downloading {url} to {dest_path}")
-        urllib.request.urlretrieve(url, dest_path)
+        response = requests.get(url, stream=True)
+        total_size = int(response.headers.get('content-length', 0))
+        block_size = 1024  # 1 Kilobyte
+        progress_bar = st.progress(0)
+        with open(dest_path, 'wb') as file:
+            for data in tqdm(response.iter_content(block_size), total=total_size//block_size, unit='KB'):
+                file.write(data)
+                progress_bar.progress(min(total_size, file.tell()) / total_size)
+        progress_bar.empty()
 
 # Load YOLO
 @st.cache_resource
