@@ -2,6 +2,8 @@
 
 Real-time Object Detection with YOLO and Streamlit
 
+https://realtimeobjectdetectionml.streamlit.app/
+
 This project showcases a real-time object detection application utilizing the YOLO (You Only Look Once) model, integrated with a streamlined interface powered by Streamlit. YOLO is renowned for its speed and accuracy in object detection tasks, making it a popular choice for various computer vision applications.
 
 Key Features
