@@ -2,27 +2,6 @@ import streamlit as st
 import cv2
 import numpy as np
 import os
-import requests
-from tqdm import tqdm
-
-# URLs for the YOLO model files
-YOLO_CONFIG_URL = "https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg"
-YOLO_WEIGHTS_URL = "https://pjreddie.com/media/files/yolov3.weights"
-COCO_NAMES_URL = "https://github.com/pjreddie/darknet/blob/master/data/coco.names"
-
-# Function to download files with progress bar
-def download_file(url, dest_path):
-    if not os.path.exists(dest_path):
-        st.write(f"Downloading {url} to {dest_path}")
-        response = requests.get(url, stream=True)
-        total_size = int(response.headers.get('content-length', 0))
-        block_size = 1024  # 1 Kilobyte
-        progress_bar = st.progress(0)
-        with open(dest_path, 'wb') as file:
-            for data in tqdm(response.iter_content(block_size), total=total_size//block_size, unit='KB'):
-                file.write(data)
-                progress_bar.progress(min(total_size, file.tell()) / total_size)
-        progress_bar.empty()
 
 # Load YOLO
 @st.cache_resource
@@ -33,18 +12,25 @@ def load_yolo():
     weights_path = os.path.join(base_path, "yolov3.weights")
     names_path = os.path.join(base_path, "coco.names")
 
-    # Download the files if they don't exist
-    download_file(YOLO_CONFIG_URL, config_path)
-    download_file(YOLO_WEIGHTS_URL, weights_path)
-    download_file(COCO_NAMES_URL, names_path)
-
     try:
+        # Check if files exist
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found: {config_path}")
+        if not os.path.exists(weights_path):
+            raise FileNotFoundError(f"Weights file not found: {weights_path}")
+        if not os.path.exists(names_path):
+            raise FileNotFoundError(f"Names file not found: {names_path}")
+
         net = cv2.dnn.readNet(weights_path, config_path)
         with open(names_path, "r") as f:
             classes = [line.strip() for line in f.readlines()]
         
         layer_names = net.getLayerNames()
         unconnected_out_layers = net.getUnconnectedOutLayers()
+
+        # Debugging information
+        #st.write("Layer names:", layer_names)
+        #st.write("Unconnected out layers:", unconnected_out_layers)
 
         if len(unconnected_out_layers) == 0:
             st.error("No unconnected output layers found. Check your YOLO model files.")
@@ -135,3 +121,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+# Footer
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<footer><p>Developed by Akhil Sudhakaran</p></footer>", unsafe_allow_html=True)
