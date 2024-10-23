@@ -6,9 +6,9 @@ import requests
 from tqdm import tqdm
 
 # URLs for the YOLO model files
-YOLO_CONFIG_URL = "https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg"
+YOLO_CONFIG_URL = "https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3.cfg"
 YOLO_WEIGHTS_URL = "https://pjreddie.com/media/files/yolov3.weights"
-COCO_NAMES_URL = "https://github.com/pjreddie/darknet/blob/master/data/coco.names"
+COCO_NAMES_URL = "https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names"
 
 # Function to download files with progress bar
 def download_file(url, dest_path):
