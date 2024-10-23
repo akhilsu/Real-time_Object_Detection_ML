@@ -4,8 +4,7 @@ import numpy as np
 from ultralytics import YOLO
 import tempfile
 
-# Load YOLOv8 model
-
+# Load YOLOv11 model
 @st.cache_resource
 def load_yolo_v11():
     try:
@@ -72,12 +71,16 @@ def main():
         if uploaded_file is not None:
             file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
             image = cv2.imdecode(file_bytes, 1)
-            st.image(image, caption='Uploaded Image', use_column_width=True)
+            # Convert BGR to RGB
+            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            st.image(image_rgb, caption='Uploaded Image', use_column_width=True)
             st.write("")
             st.write("Detecting objects...")
             results = detect_objects_v11(image, model)
             annotated_image = draw_labels_v11(results, image, class_names)
-            st.image(annotated_image, caption='Processed Image', use_column_width=True)
+            # Convert BGR to RGB before displaying
+            annotated_image_rgb = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
+            st.image(annotated_image_rgb, caption='Processed Image', use_column_width=True)
 
     elif option == "Video":
         st.sidebar.write("Upload a Video")
@@ -98,7 +101,9 @@ def main():
 
                 results = detect_objects_v11(frame, model)
                 annotated_frame = draw_labels_v11(results, frame, class_names)
-                FRAME_WINDOW.image(annotated_frame)
+                # Convert BGR to RGB before displaying
+                annotated_frame_rgb = cv2.cvtColor(annotated_frame, cv2.COLOR_BGR2RGB)
+                FRAME_WINDOW.image(annotated_frame_rgb)
 
             cap.release()
 
@@ -118,7 +123,9 @@ def main():
 
                 results = detect_objects_v11(frame, model)
                 annotated_frame = draw_labels_v11(results, frame, class_names)
-                FRAME_WINDOW.image(annotated_frame)
+                # Convert BGR to RGB before displaying
+                annotated_frame_rgb = cv2.cvtColor(annotated_frame, cv2.COLOR_BGR2RGB)
+                FRAME_WINDOW.image(annotated_frame_rgb)
 
             cap.release()
         except Exception as e:
