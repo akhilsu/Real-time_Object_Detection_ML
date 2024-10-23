@@ -27,13 +27,11 @@ def download_file(url, dest_path):
 # Load YOLO
 @st.cache_resource
 def load_yolo():
-    # Assuming the config, weights, and names files are in the same directory as the script
     base_path = os.path.dirname(__file__)
     config_path = os.path.join(base_path, "yolov3.cfg")
     weights_path = os.path.join(base_path, "yolov3.weights")
     names_path = os.path.join(base_path, "coco.names")
 
-    # Download the files if they don't exist
     download_file(YOLO_CONFIG_URL, config_path)
     download_file(YOLO_WEIGHTS_URL, weights_path)
     download_file(COCO_NAMES_URL, names_path)
@@ -123,15 +121,27 @@ def main():
         run = st.checkbox('Run')
         FRAME_WINDOW = st.image([])
 
-        cap = cv2.VideoCapture(0)
+        try:
+            cap = cv2.VideoCapture(0)
 
-        while run:
-            _, frame = cap.read()
-            outs = detect_objects(frame, net, output_layers)
-            frame = draw_labels(outs, frame, classes, colors)
-            FRAME_WINDOW.image(frame)
-        else:
+            if not cap.isOpened():
+                st.error("Could not open webcam.")
+                return
+
+            while run:
+                ret, frame = cap.read()
+                if not ret:
+                    st.error("Failed to read frame from webcam.")
+                    break
+                
+                outs = detect_objects(frame, net, output_layers)
+                frame = draw_labels(outs, frame, classes, colors)
+                FRAME_WINDOW.image(frame)
+            
             cap.release()
+        except Exception as e:
+            st.error(f"Error accessing webcam: {str(e)}")
+            return
 
 if __name__ == "__main__":
     main()
