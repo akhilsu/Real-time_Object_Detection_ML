@@ -4,6 +4,7 @@ import numpy as np
 import os
 import requests
 from tqdm import tqdm
+import tempfile
 
 # URLs for the YOLO model files
 YOLO_CONFIG_URL = "https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3.cfg"
@@ -93,7 +94,7 @@ def draw_labels(outs, img, classes, colors):
 
 def main():
     st.title("Real-time Object Detection")
-    st.write("Upload an image or use your webcam for real-time object detection using YOLO.")
+    st.write("Upload an image, a video file, or use your webcam for real-time object detection using YOLO.")
 
     net, classes, output_layers, colors = load_yolo()
 
@@ -101,7 +102,7 @@ def main():
         return
 
     st.sidebar.title("Options")
-    option = st.sidebar.selectbox("Choose Input Source", ("Image", "Webcam"))
+    option = st.sidebar.selectbox("Choose Input Source", ("Image", "Video", "Webcam"))
 
     if option == "Image":
         st.sidebar.write("Upload an Image")
@@ -116,6 +117,30 @@ def main():
             outs = detect_objects(image, net, output_layers)
             image = draw_labels(outs, image, classes, colors)
             st.image(image, caption='Processed Image', use_column_width=True)
+
+    elif option == "Video":
+        st.sidebar.write("Upload a Video")
+        uploaded_video = st.sidebar.file_uploader("Choose a video...", type=["mp4", "avi", "mov", "mkv"])
+        
+        if uploaded_video is not None:
+            tfile = tempfile.NamedTemporaryFile(delete=False) 
+            tfile.write(uploaded_video.read())
+            
+            cap = cv2.VideoCapture(tfile.name)
+            FRAME_WINDOW = st.image([])
+            run = st.checkbox('Run')
+
+            while run and cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    st.error("Failed to read frame from video file.")
+                    break
+                
+                outs = detect_objects(frame, net, output_layers)
+                frame = draw_labels(outs, frame, classes, colors)
+                FRAME_WINDOW.image(frame)
+            
+            cap.release()
 
     elif option == "Webcam":
         run = st.checkbox('Run')
