@@ -4,7 +4,7 @@ import numpy as np
 from ultralytics import YOLO
 import tempfile
 
-# Load YOLOv11 model
+# Load YOLOv8 model
 
 @st.cache_resource
 def load_yolo_v11():
