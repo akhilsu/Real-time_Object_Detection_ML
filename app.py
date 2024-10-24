@@ -4,14 +4,14 @@ import numpy as np
 from ultralytics import YOLO
 import tempfile
 
-# Load YOLOv11 model
+# Load YOLO model
 @st.cache_resource
 def load_yolo_v11():
     try:
-        model = YOLO("yolov8n.pt")  # YOLOv11 is accessed via ultralytics package
+        model = YOLO("yolov8x.pt")  # YOLO is accessed via ultralytics package
         return model
     except Exception as e:
-        st.error(f"Error loading YOLOv11: {str(e)}")
+        st.error(f"Error loading YOLO: {str(e)}")
         return None
 
 def detect_objects_v11(img, model):
@@ -53,7 +53,7 @@ def draw_labels_v11(results, img, class_names):
 
 def main():
     st.title("Real-time Object Detection")
-    st.write("Upload an image, a video file, or use your webcam for real-time object detection using YOLOv11.")
+    st.write("Upload an image, a video file, or use your webcam for real-time object detection using YOLO.")
     model = load_yolo_v11()
     if model is None:
         return
