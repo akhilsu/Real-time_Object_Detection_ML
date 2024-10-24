@@ -19,4 +19,5 @@ Dynamic Model Loading: Automatically downloads required model files if not avail
 #Long image with multiple objects
 
 <img width="413" alt="image" src="https://github.com/user-attachments/assets/370a5e36-109c-4781-a13f-597fa6e34f48">
-<img width="414" alt="image" src="https://github.com/user-attachments/assets/a9dda24a-db80-4c38-9dc9-119bee132409">
+<img width="414" alt="image" src="https://github.com/user-attachments/assets/40e24b61-ce9f-404c-b27c-cb1d15a75492">
+
